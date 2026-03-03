@@ -27,6 +27,8 @@ katmos_slow_decompression = ["fastmos"]
 reaction_hooks = []
 citadel_reactions = ["reaction_hooks"]
 yogs_reactions = ["reaction_hooks"]
+# BlueMoon-Station: реакции и газы из DM перенесены в Rust для ускорения
+bluemoon_reactions = ["reaction_hooks"]
 
 # Tracing will expose this application to a local port, use with care
 tracy = ["dep:tracing-tracy", "dep:tracing-subscriber", "dep:tracing"]

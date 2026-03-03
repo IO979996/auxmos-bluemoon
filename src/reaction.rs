@@ -1,3 +1,6 @@
+#[cfg(feature = "bluemoon_reactions")]
+mod bluemoon;
+
 #[cfg(feature = "citadel_reactions")]
 mod citadel;
 
@@ -75,6 +78,10 @@ impl Reaction {
 			.read_string_id(byond_string!("id"))
 			.map_err(|_| eyre::eyre!("Reaction id must be a string!"))?;
 		let func = {
+			#[cfg(feature = "bluemoon_reactions")]
+			{
+				bluemoon::func_from_id(string_id.as_str())
+			}
 			#[cfg(feature = "citadel_reactions")]
 			{
 				citadel::func_from_id(string_id.as_str())
