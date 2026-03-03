@@ -30,6 +30,7 @@ fn process_turf_hook(src: ByondValue, remaining: ByondValue) -> Result<ByondValu
 
 	let planet_share_ratio = src
 		.read_number_id(byond_string!("planet_share_ratio"))
+		.ok()
 		.unwrap_or(GAS_DIFFUSION_CONSTANT);
 
 	process_turf(
