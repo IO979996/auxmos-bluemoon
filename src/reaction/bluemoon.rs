@@ -10,12 +10,14 @@ use eyre::Result;
 
 const SUPER_SATURATION_THRESHOLD: f32 = 96.0; // SUPER_SATURATION_THRESHOLD из reactions.dm
 
-/// Вызов из Rust для начисления очков исследований (в DM определить /proc/bluemoon_add_research_points(amount)).
+/// Вызов из Rust для начисления очков исследований (в DM опционально /proc/bluemoon_add_research_points(amount)).
 fn research_add_points(amount: f32) {
+	// Прок может отсутствовать — не паникуем
 	let _ = byondapi::global_call::call_global_id(
 		byond_string!("bluemoon_add_research_points"),
 		&[amount.into()],
-	);
+	)
+	.ok();
 }
 
 #[must_use]
