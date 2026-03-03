@@ -783,7 +783,10 @@ fn freon_fire(byond_air: ByondValue, holder: ByondValue) -> Result<ByondValue> {
 		Ok(true)
 	})?;
 	if reacted {
-		let _ = holder.call_id(byond_string!("bluemoon_freon_hot_ice_check"), &[byond_air]);
+		// Опциональный callback на тайле: hot_ice при 120–160 K; если прока нет — не паникуем
+		let _ = holder
+			.call_id(byond_string!("bluemoon_freon_hot_ice_check"), &[byond_air])
+			.ok();
 	}
 	Ok(reacted.into())
 }
