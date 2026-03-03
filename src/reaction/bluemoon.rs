@@ -528,7 +528,7 @@ fn stimulum_formation(byond_air: ByondValue, _holder: ByondValue) -> Result<Byon
 	let nitryl = gas_idx_from_string(GAS_NITRYL)?;
 	let stim = gas_idx_from_string(GAS_STIMULUM)?;
 	let reacted = with_mix_mut(&byond_air, |air| {
-		let temp = air.return_temperature();
+		let temp = air.get_temperature();
 		let heat_scale = (temp / STIMULUM_HEAT_SCALE)
 			.min(air.get_moles(tritium))
 			.min(air.get_moles(plasma))
@@ -557,7 +557,7 @@ fn stimulum_formation(byond_air: ByondValue, _holder: ByondValue) -> Result<Byon
 		if stim_energy != 0.0 && air.heat_capacity() > MINIMUM_HEAT_CAPACITY {
 			let old_cap = air.heat_capacity();
 			air.set_temperature(
-				((air.return_temperature() * old_cap + stim_energy) / air.heat_capacity())
+				((air.get_temperature() * old_cap + stim_energy) / air.heat_capacity())
 					.max(TCMB),
 			);
 		}
@@ -615,7 +615,7 @@ fn miasma_sterilization(byond_air: ByondValue, _holder: ByondValue) -> Result<By
 		if air.get_moles(h2o) > 0.1 {
 			return Ok(false);
 		}
-		let temp = air.return_temperature();
+		let temp = air.get_temperature();
 		let cleaned = air.get_moles(miasma).min(
 			20.0 + (temp - (T0C + 170.0)) / 20.0,
 		);
@@ -676,7 +676,7 @@ fn hagedorn(byond_air: ByondValue, _holder: ByondValue) -> Result<ByondValue> {
 				return Ok(());
 			}
 			let initial_energy = air.thermal_energy();
-			let temp = air.return_temperature();
+			let temp = air.get_temperature();
 			for i in 0..super::total_num_gases() {
 				air.set_moles(i, 0.0);
 			}
@@ -702,7 +702,7 @@ fn dehagedorn(byond_air: ByondValue, _holder: ByondValue) -> Result<ByondValue> 
 			air.set_moles(qcd, 0.0);
 			air.set_temperature(air.get_temperature().min(1.8e12));
 			let new_temp = air.get_temperature();
-			let mut gas_indices: Vec<GasIDX> = (0..super::total_num_gases())
+			let gas_indices: Vec<GasIDX> = (0..super::total_num_gases())
 				.filter(|&i| i != qcd && i != tritium && i != hypernob)
 				.collect();
 			if gas_indices.is_empty() {
@@ -792,7 +792,7 @@ fn freon_formation(byond_air: ByondValue, _holder: ByondValue) -> Result<ByondVa
 	let bz = gas_idx_from_string(GAS_BZ)?;
 	let freon = gas_idx_from_string(GAS_FREON)?;
 	let reacted = with_mix_mut(&byond_air, |air| {
-		let temp = air.return_temperature();
+		let temp = air.get_temperature();
 		let plasma_moles = air.get_moles(plasma);
 		let co2_moles = air.get_moles(co2);
 		let bz_moles = air.get_moles(bz);
@@ -815,7 +815,7 @@ fn freon_formation(byond_air: ByondValue, _holder: ByondValue) -> Result<ByondVa
 		let energy_consumed = FREON_FORMATION_ENERGY_CONSUMED * reaction_units;
 		if old_cap > MINIMUM_HEAT_CAPACITY {
 			air.set_temperature(
-				((air.return_temperature() * old_cap - energy_consumed) / air.heat_capacity())
+				((air.get_temperature() * old_cap - energy_consumed) / air.heat_capacity())
 					.max(TCMB),
 			);
 		}
@@ -860,7 +860,7 @@ fn healium_formation(byond_air: ByondValue, _holder: ByondValue) -> Result<Byond
 	let freon = gas_idx_from_string(GAS_FREON)?;
 	let healium = gas_idx_from_string(GAS_HEALIUM)?;
 	let reacted = with_mix_mut(&byond_air, |air| {
-		let temp = air.return_temperature();
+		let temp = air.get_temperature();
 		if temp > HEALIUM_FORMATION_MAX_TEMP {
 			return Ok(false);
 		}
